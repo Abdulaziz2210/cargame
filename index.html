@@ -182,7 +182,10 @@
         <div class="game-over" id="gameOverScreen">Game Over! Your score: <span id="finalScore"></span></div>
     </div>
     <script>
-        
+        let speed = 7; // Base speed for obstacles
+let carSpeed = 20; // Base speed for car movement
+
+
         var video = document.getElementById("myVideo");
 
         const canvas = document.getElementById('gameCanvas');
@@ -194,29 +197,25 @@
         let carPosition = 175; // Initial position of the car
         let gameOver = false;
 
-        function createObstacle() {
-    const obstacle = document.createElement('div');
-    obstacle.classList.add('obstacle');
-    obstacle.style.left = `${Math.floor(Math.random() * (canvas.clientWidth - 50))}px`;
-    obstacle.style.backgroundImage = "url('path/to/your/image.png')"; // Replace with your image path
-    obstacle.style.backgroundSize = 'cover'; // Ensure the image covers the div
-    canvas.appendChild(obstacle);
-    obstacles.push(obstacle);
-}
+      let speed = 7; // Base speed for obstacles
+let carSpeed = 20; // Base speed for car movement
 
-        function moveObstacles() {
+function moveObstacles() {
     for (let i = 0; i < obstacles.length; i++) {
         const obstacle = obstacles[i];
         const obstacleTop = parseInt(obstacle.style.top) || 0;
-
         if (obstacleTop < canvas.clientHeight) {
-            obstacle.style.top = `${obstacleTop + 7}px`; // Increased speed
+            obstacle.style.top = `${obstacleTop + speed}px`; // Use the speed variable
         } else {
             obstacle.remove();
             obstacles.splice(i, 1);
             score++;
-        }
 
+            // Increase speed for every 10 points scored
+            if (score % 10 === 0) {
+                speed += 2; // Increase speed by 2
+            }
+        }
         // Check for collision
         if (obstacleTop + 100 >= canvas.clientHeight - 10 && 
             parseInt(obstacle.style.left) < carPosition + 50 && 
@@ -228,9 +227,9 @@
 
 function controlCar(event) {
     if (event.key === 'ArrowLeft' && carPosition > 0) {
-        carPosition -= 20; // Increased speed
+        carPosition -= carSpeed; // Use carSpeed variable
     } else if (event.key === 'ArrowRight' && carPosition < canvas.clientWidth - 50) {
-        carPosition += 20; // Increased speed
+        carPosition += carSpeed; // Use carSpeed variable
     }
     car.style.left = `${carPosition}px`;
 }
